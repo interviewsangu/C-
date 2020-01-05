@@ -63,3 +63,72 @@ int main(void)
         return [&]()->int{return a + b;}();    
     }();         
 }
+
+
+
+#include <iostream>
+#include <functional>
+#include <ctime>
+#include <vector>
+#include <algorithm>
+#define V_SIZE 1
+ 
+std::vector<int> genRandomNum(int maximum, int size);
+void printVector(std::vector<int> vector);
+ 
+int main() 
+{
+    srand((unsigned int)time(NULL));
+    auto genVector = std::bind(genRandomNum, 100, 10);
+    std::vector<std::vector<int>> vInt(V_SIZE);
+ 
+    for (int i = 0; i < V_SIZE; i++) {
+        vInt[i] = genVector();
+    }
+  
+    for (std::vector<int> v : vInt) {
+        std::cout << "정렬 전: ";
+        printVector(v);
+ 
+        // Sort in a ascending order
+        sort(v.begin(), v.end(),
+            [](int first, int second) -> bool
+        {
+            return first < second;
+        });
+ 
+ 
+        std::cout << "정렬 후(오름차순): ";
+        printVector(v);
+ 
+        // Sort in a descending order
+        sort(v.begin(), v.end(),
+            [](int first, int second) -> bool
+        {
+            return first > second;
+        });
+ 
+        std::cout << "정렬 후(내림차순): ";
+        printVector(v);
+        std::cout << std::endl;
+    }
+    return 0;
+}
+ 
+std::vector<int> genRandomNum(int maximum, int size)
+{
+    std::vector<int> temp;
+    for (int i = 0; i < size; i++) {
+        temp.push_back(rand() % maximum + 1);
+    }
+    return temp;
+}
+ 
+void printVector(std::vector<int> vector)
+{
+    for (auto v : vector)
+    {
+        std::cout << v << ' ';
+    }
+    std::cout << std::endl;
+}
